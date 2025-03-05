@@ -28,4 +28,4 @@
 # Misc
 /dev/mem                  0660   system     root
 /dev/ttyGS0               0660   system     system
-/dev/snd/controlC0 0660 system audio
+/dev/snd/controlC0        0660   system     audio
