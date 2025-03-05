@@ -293,6 +293,12 @@ on boot
     write /proc/sys/vm/dirty_expire_centisecs 200
     write /proc/sys/vm/min_free_order_shift 4
 
+# Swap tweaks
+    write /proc/sys/vm/swappiness 70
+    write /proc/sys/vm/dirty_background_ratio 5
+    write /proc/sys/vm/dirty_expire_centisecs 200
+    write /proc/sys/vm/min_free_order_shift 4
+
 on fs
     mount_all /fstab.rhea_ss_zanin
     swapon_all fstab.rhea_ss_zanin
@@ -335,7 +341,16 @@ on fs
     chmod 0660 /sys/class/sec/sec_touchkey/touchkey_home
     chown system system /sys/class/sec/sec_touchkey/touchkey_back
     chmod 0660 /sys/class/sec/sec_touchkey/touchkey_back
-    
+
+    # Configure UKSM
+    chown root system /sys/kernel/mm/uksm/sleep_millisecs
+    chmod 0664 /sys/kernel/mm/uksm/sleep_millisecs
+    write /sys/kernel/mm/uksm/sleep_millisecs 500
+
+    # Configure KSM
+    write /sys/kernel/mm/ksm/pages_to_scan 100
+    write /sys/kernel/mm/ksm/sleep_millisecs 500
+    write /sys/kernel/mm/ksm/run 1
 
 # permissions for sensors (accelerometer & magnetic & proximity)
     chown root system /dev/hscd_i2c
@@ -368,7 +383,7 @@ chown system radio /sys/class/sec/switch/adc
 on post-fs
     chown radio system /efs
     chmod 0771 /efs
-
+chown system 
 # create filesystem if necessary
 service setup_fs /system/bin/setup_fs \
             /dev/block/mmcblk0p3 \
